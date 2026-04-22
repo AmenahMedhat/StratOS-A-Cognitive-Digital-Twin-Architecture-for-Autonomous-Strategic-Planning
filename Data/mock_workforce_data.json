@@ -1,0 +1,116 @@
+{
+  "report_date": "2024-12-01",
+  "department_summaries": {
+    "Computer_Science": {
+      "active_students": 820
+    },
+    "Artificial_Intelligence": {
+      "active_students": 223
+    },
+    "Information_Systems": {
+      "active_students": 415
+    }
+  },
+  "employee_records": [
+    {
+      "employee_id": "ITCS-001",
+      "department": "Computer_Science",
+      "academic_rank": "Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Full-Time",
+      "hire_date": "2010-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 35
+    },
+    {
+      "employee_id": "ITCS-002",
+      "department": "Artificial_Intelligence",
+      "academic_rank": "Assistant Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Part-Time",
+      "hire_date": "2022-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 10
+    },
+    {
+      "employee_id": "ITCS-003",
+      "department": "Computer_Science",
+      "academic_rank": "Associate Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Full-Time",
+      "hire_date": "2015-01-15",
+      "resignation_date": "2024-06-30",
+      "training_hours_ytd": 0
+    },
+    {
+      "employee_id": "ITCS-004",
+      "department": "Computer_Science",
+      "academic_rank": "Teaching Assistant",
+      "highest_degree": "MSc",
+      "employment_type": "Full-Time",
+      "hire_date": "2023-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 8
+    },
+    {
+      "employee_id": "ITCS-005",
+      "department": "Artificial_Intelligence",
+      "academic_rank": "Teaching Assistant",
+      "highest_degree": "MSc",
+      "employment_type": "Full-Time",
+      "hire_date": "2023-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 22
+    },
+    {
+      "employee_id": "ITCS-006",
+      "department": "Artificial_Intelligence",
+      "academic_rank": "Assistant Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Part-Time",
+      "hire_date": "2021-02-01",
+      "resignation_date": null,
+      "training_hours_ytd": 5
+    },
+    {
+      "employee_id": "ITCS-007",
+      "department": "Information_Systems",
+      "academic_rank": "Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Full-Time",
+      "hire_date": "2008-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 40
+    },
+    {
+      "employee_id": "ITCS-008",
+      "department": "Information_Systems",
+      "academic_rank": "Teaching Assistant",
+      "highest_degree": "BSc",
+      "employment_type": "Full-Time",
+      "hire_date": "2024-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 4
+    },
+    {
+      "employee_id": "ITCS-009",
+      "department": "Computer_Science",
+      "academic_rank": "Assistant Professor",
+      "highest_degree": "PhD",
+      "employment_type": "Part-Time",
+      "hire_date": "2020-09-01",
+      "resignation_date": null,
+      "training_hours_ytd": 12
+    },
+    {
+      "employee_id": "ITCS-010",
+      "department": "Computer_Science",
+      "academic_rank": "Lecturer",
+      "highest_degree": "MSc",
+      "employment_type": "Full-Time",
+      "hire_date": "2019-09-01",
+      "resignation_date": "2024-03-01",
+      "training_hours_ytd": 0
+    }
+  ]
+}

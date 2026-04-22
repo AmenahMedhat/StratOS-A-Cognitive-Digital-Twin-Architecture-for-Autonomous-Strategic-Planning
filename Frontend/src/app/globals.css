@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 228 47% 4%;
+    --foreground: 210 40% 96%;
+    --card: 228 35% 6%;
+    --card-foreground: 210 40% 96%;
+    --popover: 228 35% 6%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 189 94% 53%;
+    --primary-foreground: 228 47% 8%;
+    --secondary: 228 20% 12%;
+    --secondary-foreground: 210 30% 80%;
+    --muted: 228 20% 10%;
+    --muted-foreground: 215 20% 50%;
+    --accent: 228 20% 12%;
+    --accent-foreground: 210 30% 85%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 228 20% 10%;
+    --input: 228 20% 10%;
+    --ring: 189 94% 53%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-[#080a14] text-slate-200;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+@layer utilities {
+  .h-4\.5 {
+    height: 1.125rem;
+  }
+  .w-4\.5 {
+    width: 1.125rem;
+  }
+
+  /* Glow animations */
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(34, 211, 238, 0.15); }
+    50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+  }
+
+  .glow-cyan {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  /* Skeleton loader */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 25%,
+      rgba(255,255,255,0.07) 37%,
+      rgba(255,255,255,0.03) 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+  }
+}
