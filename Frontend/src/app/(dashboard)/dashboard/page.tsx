@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useDashboard } from "@/hooks/useDashboard";
+import { useAgentResults } from "@/contexts/AgentResultsContext";
 import { Header } from "@/components/layout/Header";
 import { ComplianceHeader } from "@/components/dashboard/ComplianceHeader";
 import { KPIGrid } from "@/components/dashboard/KPIGrid";
@@ -19,14 +20,10 @@ function LoadingSkeleton() {
     <div className="flex flex-col gap-5 p-6 animate-fade-in">
       <Skeleton className="h-28" />
       <div className="grid grid-cols-6 gap-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-20" />
-        ))}
+        {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-20" />)}
       </div>
       <div className="grid grid-cols-3 gap-5">
-        <div className="col-span-2">
-          <Skeleton className="h-72" />
-        </div>
+        <div className="col-span-2"><Skeleton className="h-72" /></div>
         <Skeleton className="h-72" />
       </div>
       <div className="grid grid-cols-3 gap-5">
@@ -40,6 +37,20 @@ function LoadingSkeleton() {
 
 export default function CommandCenterPage() {
   const { data, loading, error } = useDashboard();
+
+  // Pull live agent results from the global persistent context.
+  // If agents have been run (on any page), their insights appear here automatically.
+  const { results } = useAgentResults();
+  const liveInsights = results.insights;
+  const researchData = results.research;
+
+  // Always use live agent results — show empty state until agents are run
+  const swotSummary = {
+    strengths:     liveInsights.filter((i) => i.category === "strength"),
+    weaknesses:    liveInsights.filter((i) => i.category === "weakness"),
+    opportunities: liveInsights.filter((i) => i.category === "opportunity"),
+    threats:       liveInsights.filter((i) => i.category === "threat"),
+  };
 
   return (
     <div className="flex min-h-full flex-col">
@@ -58,30 +69,24 @@ export default function CommandCenterPage() {
 
       {data && (
         <div className="flex flex-col gap-5 p-6 animate-fade-in">
-          {/* Compliance score banner */}
           <ComplianceHeader compliance={data.compliance} />
-
-          {/* KPI metrics strip */}
           <KPIGrid metrics={data.kpis} />
 
-          {/* Main content: SWOT + Meetings side by side */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <SWOTSummaryCard
-                strengths={data.swot_summary.strengths}
-                weaknesses={data.swot_summary.weaknesses}
-                opportunities={data.swot_summary.opportunities}
-                threats={data.swot_summary.threats}
+                strengths={swotSummary.strengths}
+                weaknesses={swotSummary.weaknesses}
+                opportunities={swotSummary.opportunities}
+                threats={swotSummary.threats}
               />
             </div>
             <MeetingSummaries meetings={data.recent_meetings} />
           </div>
 
-          {/* Bottom row: Competitive Intel + Scenario Simulator */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-            <CompetitiveIntelWidget data={null} />
+            <CompetitiveIntelWidget data={researchData} />
             <ScenarioWidget simulation={data.last_simulation} />
-            {/* Placeholder for a 4th widget */}
             <div className="flex flex-col rounded-xl border border-dashed border-white/10 items-center justify-center p-6 text-center">
               <p className="text-xs text-slate-600">Upcoming widget</p>
               <p className="mt-1 text-[10px] text-slate-700">Workforce Analytics</p>

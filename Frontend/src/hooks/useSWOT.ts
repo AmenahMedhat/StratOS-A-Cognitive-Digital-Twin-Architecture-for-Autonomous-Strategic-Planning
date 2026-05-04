@@ -1,55 +1,64 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { fetchInsights } from "@/services/mockApi";
+import { useState, useCallback } from "react";
+import { runAgentAndWait, type AgentName } from "@/services/agentApi";
+import { useAgentResults } from "@/contexts/AgentResultsContext";
 import type { InsightCard, SwotCategory, NaqaaePillar } from "@/types";
 
+export type SwotAgentName = Extract<AgentName, "tech" | "workforce" | "sentiment">;
+
 export function useSWOT() {
-  const [insights, setInsights] = useState<InsightCard[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<SwotCategory | "all">("all");
   const [pillarFilter, setPillarFilter] = useState<NaqaaePillar | "all">("all");
+  const [agentRunning, setAgentRunning] = useState<SwotAgentName | null>(null);
+  const [agentError, setAgentError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  // Only live agent results — no mock fallback
+  const { results, addInsights } = useAgentResults();
+
+  const runAgent = useCallback(async (agentName: SwotAgentName) => {
+    setAgentRunning(agentName);
+    setAgentError(null);
     try {
-      const result = await fetchInsights();
-      setInsights(result);
+      const result = await runAgentAndWait(agentName, { intervalMs: 3_000 }) as {
+        insights?: InsightCard[];
+      };
+      if (result?.insights && result.insights.length > 0) {
+        addInsights(result.insights);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load insights");
+      setAgentError(
+        err instanceof Error ? err.message : `${agentName} agent failed`
+      );
     } finally {
-      setLoading(false);
+      setAgentRunning(null);
     }
-  }, []);
+  }, [addInsights]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  const filtered = insights.filter((i) => {
+  const filtered = results.insights.filter((i) => {
     const matchCat = categoryFilter === "all" || i.category === categoryFilter;
     const matchPillar = pillarFilter === "all" || i.pillar_tag === pillarFilter;
     return matchCat && matchPillar;
   });
 
   const byCategory = {
-    strength: filtered.filter((i) => i.category === "strength"),
-    weakness: filtered.filter((i) => i.category === "weakness"),
+    strength:    filtered.filter((i) => i.category === "strength"),
+    weakness:    filtered.filter((i) => i.category === "weakness"),
     opportunity: filtered.filter((i) => i.category === "opportunity"),
-    threat: filtered.filter((i) => i.category === "threat"),
+    threat:      filtered.filter((i) => i.category === "threat"),
   };
 
   return {
     insights: filtered,
     byCategory,
-    loading,
-    error,
-    refetch: load,
+    loading: false,
+    error: null,
     categoryFilter,
     setCategoryFilter,
     pillarFilter,
     setPillarFilter,
+    runAgent,
+    agentRunning,
+    agentError,
   };
 }

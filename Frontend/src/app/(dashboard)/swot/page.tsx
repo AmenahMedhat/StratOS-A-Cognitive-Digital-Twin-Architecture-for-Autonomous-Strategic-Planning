@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Filter } from "lucide-react";
+import { Sparkles, Filter, Loader2, Play } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { useSWOT } from "@/hooks/useSWOT";
 import { NAQAAE_PILLARS } from "@/types";
@@ -193,7 +193,7 @@ function SwotColumn({ category, items }: { category: SwotCategory; items: Insigh
       {items.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/10 py-8">
           <p className="text-xs text-slate-600">No insights yet</p>
-          <p className="text-[10px] text-slate-700">Upload documents to generate insights</p>
+          <p className="text-[10px] text-slate-700">Run an agent above to generate live insights</p>
         </div>
       )}
     </div>
@@ -202,7 +202,11 @@ function SwotColumn({ category, items }: { category: SwotCategory; items: Insigh
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function SWOTPage() {
-  const { byCategory, loading, error, pillarFilter, setPillarFilter, categoryFilter, setCategoryFilter } = useSWOT();
+  const {
+    byCategory, loading, error,
+    pillarFilter, setPillarFilter, categoryFilter, setCategoryFilter,
+    runAgent, agentRunning, agentError,
+  } = useSWOT();
 
   const totalInsights = Object.values(byCategory).flat().length;
 
@@ -211,6 +215,47 @@ export default function SWOTPage() {
       <Header title="SWOT Analysis" subtitle="AI-powered strategic insights validated against research data" />
 
       <div className="flex flex-col gap-5 p-6">
+        {/* Live Agent Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {(
+            [
+              { name: "tech" as const, label: "Tech Intelligence", hint: "GitHub · CISA · Jobs" },
+              { name: "workforce" as const, label: "Workforce Analysis", hint: "HR metrics · Gemini" },
+              { name: "sentiment" as const, label: "Sentiment Analysis", hint: "Student feedback · Ollama" },
+            ] as const
+          ).map(({ name, label, hint }) => {
+            const running = agentRunning === name;
+            return (
+              <button
+                key={name}
+                onClick={() => runAgent(name)}
+                disabled={agentRunning !== null}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-all",
+                  running
+                    ? "border-cyan-500/40 bg-cyan-500/10 text-cyan-300"
+                    : "border-white/10 bg-white/5 text-slate-400 hover:border-cyan-500/30 hover:text-slate-200 disabled:opacity-40"
+                )}
+              >
+                {running ? (
+                  <Loader2 className="h-3 w-3 animate-spin text-cyan-400" />
+                ) : (
+                  <Play className="h-3 w-3" />
+                )}
+                <span className="font-medium">{label}</span>
+                <span className="text-slate-600">{hint}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Agent error banner */}
+        {agentError && (
+          <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-xs text-rose-400">
+            <span className="font-semibold">Agent error: </span>{agentError}
+          </div>
+        )}
+
         {/* Filters + summary bar */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Summary counts */}

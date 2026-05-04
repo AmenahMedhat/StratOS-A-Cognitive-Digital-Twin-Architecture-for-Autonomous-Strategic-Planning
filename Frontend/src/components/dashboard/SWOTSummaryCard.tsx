@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { TrendingUp, TrendingDown, Target, AlertTriangle, ArrowRight, FileText } from "lucide-react";
+import { TrendingUp, TrendingDown, Target, AlertTriangle, ArrowRight, FileText, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { InsightCard } from "@/types";
 
@@ -107,6 +107,9 @@ export function SWOTSummaryCard({
   opportunities: InsightCard[];
   threats: InsightCard[];
 }) {
+  const allItems = [...strengths, ...weaknesses, ...opportunities, ...threats];
+  const hasLive = allItems.some((i) => i.data_source === "live");
+
   return (
     <div className="rounded-xl border border-white/5 bg-[#0d1117]">
       {/* Header */}
@@ -115,10 +118,20 @@ export function SWOTSummaryCard({
           <h2 className="font-semibold text-slate-100">SWOT Analysis</h2>
           <p className="mt-0.5 text-xs text-slate-500">Top validated insights</p>
         </div>
-        <div className="flex h-2 w-2 items-center">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse-slow" />
-          <span className="ml-1.5 text-xs text-emerald-400">Live</span>
-        </div>
+        {hasLive ? (
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs text-emerald-400">Live</span>
+          </div>
+        ) : (
+          <Link
+            href="/swot"
+            className="flex items-center gap-1.5 rounded-lg border border-cyan-500/20 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-medium text-cyan-400 transition-colors hover:bg-cyan-500/20"
+          >
+            <Play className="h-3 w-3" />
+            Run agents
+          </Link>
+        )}
       </div>
 
       {/* 2×2 grid */}

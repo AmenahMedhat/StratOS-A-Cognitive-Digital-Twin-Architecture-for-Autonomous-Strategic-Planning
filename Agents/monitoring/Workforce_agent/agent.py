@@ -46,9 +46,11 @@ from .tools import calculate_all_hr_metrics
 
 load_dotenv()  # Loads GOOGLE_API_KEY (or OPENAI_API_KEY) from .env
 
-# Path to the mock data file – sits alongside this package by default
+# Path to the mock data file — resolved from the project root's Data/ folder.
+# __file__ = GRAD/Agents/monitoring/Workforce_agent/agent.py
+# .parent×4 = GRAD/
 _DEFAULT_DATA_PATH: Path = (
-    Path(__file__).parent.parent.parent / "mock_workforce_data.json"
+    Path(__file__).parent.parent.parent.parent / "Data" / "mock_workforce_data.json"
 )
 
 
@@ -221,6 +223,25 @@ def build_graph() -> StateGraph:
 
 # Compile the graph into the public `app` object
 app = build_graph().compile()
+
+
+def compile_and_run(data_path: str | None = None) -> dict:
+    """
+    Normalized entry point for API integration.
+    Returns calculated HR metrics and LLM-extracted insights as a dictionary.
+    """
+    initial_state: WorkforceState = {
+        "raw_data": {},
+        "calculated_metrics": {},
+        "insights": [],
+        "data_path": data_path,
+    }
+    result = app.invoke(initial_state)
+    return {
+        "calculated_metrics": result["calculated_metrics"],
+        "insights": result["insights"],
+        "error": None,
+    }
 
 
 # ---------------------------------------------------------------------------
